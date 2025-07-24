@@ -1,67 +1,51 @@
-const wishlistModel = require('./wishlist.model');
+const mongoose = require('mongoose');
+const Wishlist = require('./wishlist.model');
 
-exports.getAllWishlists = async () => {
-    try {
-        const wishlists = await wishlistModel.find();
-        return wishlists;
-    } catch (error) {
-        return { message: 'Error retrieving wishlists', error };
-    }
-}
+exports.getAllWishlist = async (user_id) => {
+    return await Wishlist.find({user_id:user_id}).populate('art_id');
+};
 
-exports.getWishlistById = async (user_id) => {
+exports.getWishlistItem = async (user_id, item_id) => {
+    return await Wishlist.find({ user_id:user_id, item_id:item_id})
+                        .populate({
+                            path: 'art_id',
+                            model: 'Artwork'
+                        });
+};
+
+exports.addWishlistItem = async (user_id, art_id) => {
     try {
-        const wishlist = await wishlistModel.findOne({ user_id });
-        if (!wishlist) {
-            return { message: 'Wishlist not found' };
-        }
-        return wishlist;
-    }
-    catch (error) {
-        return { message: 'Error retrieving wishlist', error };
-    }
-}
-exports.createWishlist = async (_id, user_id, art_id) => {
-    try {
-        const newWishlist = new wishlistModel({
-            _id,
+        const exists = await Wishlist.findOne({ user_id, art_id });
+        if (exists) return { message: 'Already in wishlist' };
+
+        const newWishlist = new Wishlist({
+            _id: new mongoose.Types.ObjectId(),
             user_id,
             art_id
         });
+
         await newWishlist.save();
-        return newWishlist;
+
+        const populatedWishlist = await Wishlist.findById(newWishlist._id).populate('art_id');
+        return populatedWishlist;
+
     } catch (error) {
-        console.error('Wishlist creation error:', error);
         return { message: 'Error creating wishlist', error };
     }
-}
-exports.updateWishlist = async (id, user_id, art_id) => {
-    try {
-        const updatedWishlist = await wishlistModel.findOneAndUpdate(
-            { _id: id },
-            { user_id , art_id },
-            { new: true }
-        );
-        if (!updatedWishlist) {
-            return { message: 'Wishlist not found' };
-        }
-        return updatedWishlist;
-    } catch (error) {
-        return { message: 'Error updating wishlist', error };
-    }
-}
-exports.deleteWishlist = async (id, user_id, art_id) => {
-    try {
-        const deletedWishlist = await wishlistModel.findOneAndDelete(
-            { _id: id }, 
-            {user_id, art_id },
-            { new: true }
-        );
-        if (!deletedWishlist) {
-            return { message: 'Wishlist not found' };
-        }
-        return deletedWishlist; 
-    } catch (error) {
-        return { message: 'Error deleting wishlist', error };
-    }
-}
+};
+
+// exports.updateWishlist = async (id, user_id, art_id) => {
+//     return await Wishlist.findByIdAndUpdate(
+//         id,
+//         { user_id, art_id },
+//         { new: true }
+//     ).populate('art_id').populate('user_id');
+// };
+
+exports.removeWishlistItem = async (user_id, art_id) => {
+    return await Wishlist.findOneAndDelete({ user_id, art_id });
+};
+
+// exports.deleteWishlistByArt = async (user_id, art_id) => {
+//     return await Wishlist.findOneAndDelete({ user_id, art_id });
+// };

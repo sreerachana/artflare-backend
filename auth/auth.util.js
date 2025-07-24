@@ -22,20 +22,35 @@ exports.comparePassword = async (password, hashedPassword) => {
 }
 exports.generateToken = (payload) => {
     try {
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '30d' });
         return token;
     } catch (error) {
         throw new Error('Error generating token');
     }
 }
+// new token verification
+
 exports.verifyToken = (token) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         return decoded;
     } catch (error) {
+        console.error('JWT verification error:', error.name, error.message);
         throw new Error('Invalid token');
     }
-}
+};
+
+
+// old token verification
+
+// exports.verifyToken = (token) => {
+//     try {
+//         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//         return decoded;
+//     } catch (error) {
+//         throw new Error('Invalid token');
+//     }
+// }
 exports.generateResetCode = () => {
     try {
         const reset_code = Math.floor(100000 + Math.random() * 900000);

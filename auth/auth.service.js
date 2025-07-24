@@ -1,177 +1,77 @@
 const User = require('../users/user.model');
-const {comparePassword, generateToken} = require('./auth.util');
+const { comparePassword, generateToken } = require('./auth.util');
 
-// register new user
+const AppError = require('../utils/appError.util');
+
+// Register a new user
 exports.register = async (name, phone_number, email, password, role = 'user') => {
-  try {
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      throw new Error('User already exists');
+        throw new AppError('User already exists', 400);
     }
-    // Create new user
+
     const newUser = new User({
-      name,
-      phone_number,
-      email,
-      password,
-      role,
+        name,
+        phone_number,
+        email,
+        password,
+        role,
     });
-    await newUser.save();
-    return newUser;
-  }
-  catch (error) {
-    throw new Error(error.message);
-  }
-}
-// login user
-exports.login = async (email, password) => {
-  const user = await User.findOne({ email });
-  if (!user) {
-    throw new Error('User not found');
-  }
 
-  const isMatch = await comparePassword(password, user.password);
-  if (!isMatch) {
-    const error = new Error('Invalid password');
-    error.statusCode = 401;
-    throw error;
-  }
-
-  const payload = {
-    id: user._id,
-    name: user.name,
-    email: user.email,
-  };
-
-  const token = generateToken(payload);
-
-  const sanitizedUser = {
-    name: user.name,
-    role: user.role,
-    email: user.email,
-  };
-
-  return {
-    message: 'Login successful',
-    user: sanitizedUser,
-    token,
-  };
+    return await newUser.save();
 };
 
-// handle forgot password
-exports.handleForgotPassword = async (email) => {
-    try {
-        const user = await User.findOne({ email });
-        if (!user) {
-            throw new Error('User not found');
-        }
-        // Generate reset code
-        const reset_code = Math.floor(100000 + Math.random() * 900000);
-        // Send reset code to user's email
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.EMAIL,
-                pass: process.env.EMAIL_PASSWORD
-            }
-        });
-        const mailOptions = {
-            from: process.env.EMAIL,
-            to: email,
-            subject: 'Password Reset Code',
-            text: `Your password reset code is ${reset_code}`
-        };
-        await transporter.sendMail(mailOptions);
-        // Save reset code to user
-        user.reset_code = reset_code;
-        await user.save();
-        return { message: 'Reset code sent to email' };
+// Login existing user
+exports.login = async (email, password) => {
+    const user = await User.findOne({ email });
+    if (!user) {
+        throw new AppError('User not found', 404);
     }
-    catch (error) {
-        throw new Error(error.message);
+
+    const isMatch = await comparePassword(password, user.password);
+    if (!isMatch) {
+        throw new AppError('Invalid password', 401);
     }
-}
-// handle verify otp
-exports.handleVerifyOtp = async (email, reset_code) => {
-    try {
-        const user = await User.find({ email, reset_code });
-        if (!user) {
-            throw new Error('User not found');
-        }
-        // Verify reset code
-        if (user.reset_code !== reset_code) {
-            throw new Error('Invalid reset code');
-        }
-        // Reset reset code
-        user.reset_code = null;
-        await user.save();
-        return { message: 'Reset code verified' };
-    }
-    catch (error) {
-        throw new Error(error.message);
-    }
-}
-// handle reset password
-exports.handleResetPassword = async (email, reset_code, new_password) => {
-    try {
-        const user = await User.find({ email, reset_code, new_password });
-        if (!user) {
-            throw new Error('User not found');
-        }
-        // Verify reset code
-        if (user.reset_code !== reset_code) {
-            throw new Error('Invalid reset code');
-        }
-        // Hash new password
-        const hashedPassword = await hashPassword(new_password);
-        // Update password
-        user.password = hashedPassword;
-        user.reset_code = null;
-        await user.save();
-        return { message: 'Password reset successfully' };
-    }
-    catch (error) {
-        throw new Error(error.message);
-    }
-}
+
+    const payload = {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+    };
+
+    const token = generateToken(payload);
+
+    const sanitizedUser = {
+        name: user.name,
+        role: user.role,
+        email: user.email,
+    };
+
+    return { user: sanitizedUser, token };
+};
+
+// Find user by email
 exports.findUserByEmail = async (email) => {
-    try {
-        const user = await User.findOne({ email });
-        if (!user) {
-            throw new Error('User not found');
-        }
-        return user;
-    }
-    catch (error) {
-        throw new Error(error.message);
-    }
-}
-exports.updateResetCode = async (existingUser, resetCode, resetExpiry) => {
-  existingUser.reset_code = resetCode;
-  existingUser.reset_code_expiry = resetExpiry;
+    return await User.findOne({ email });
+};
 
-  return await existingUser.save();
-}
+// Update user's reset code and expiry
+exports.updateResetCode = async (user, code, expiry) => {
+    user.reset_code = code;
+    user.reset_code_expiry = expiry;
+    return await user.save();
+};
+
+// Reset the reset_code and expiry fields
 exports.resetResetCode = async (user) => {
-  user.reset_code = undefined;
-  user.reset_code_expiry = undefined;
+    user.reset_code = undefined;
+    user.reset_code_expiry = undefined;
+    return await user.save();
+};
 
-  return await user.save();
-}
-exports.saveUser = async ( user, password ) => {
-  user.password = password
-  return await user.save()
-}
-
-exports.registerArtist = async ( { name, email, phone_number, password, } ) =>{
-  const artist = new User({
-    name,
-    email,
-    phone_number,
-    password,
-    role: 'artist',
-  });
-   
-return await artist.save();
-}
+// Save updated password
+exports.saveUser = async (user, password) => {
+    user.password = password;
+    return await user.save();
+};

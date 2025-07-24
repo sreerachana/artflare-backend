@@ -1,17 +1,14 @@
 const mongoose = require('mongoose');
 
 const orderItemSchema = new mongoose.Schema({
-  order_item_id: {
-    type: Number,
-    required: true,
-    unique: true
-  },
   order_id: {
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Order',
     required: true
   },
   art_id: {
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Artwork',
     required: true
   },
   quantity: {
@@ -31,8 +28,10 @@ const orderItemSchema = new mongoose.Schema({
   status_id: {
     type: String,
     required: true,
-    enum: ['PENDING', 'SHIPPING', 'DELIVERED', 'CANCELLED'] // extend as needed
+    enum: ['PENDING', 'SHIPPING', 'DELIVERED', 'CANCELLED']
   }
+}, {
+  timestamps: true
 });
 
 const OrderItem = mongoose.model('OrderItem', orderItemSchema, 'order_items');

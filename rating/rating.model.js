@@ -1,10 +1,15 @@
 const mongoose = require('mongoose');
 
 const RatingSchema = new mongoose.Schema({
-  review_id: {
-    type: Number,
-    required: true,
-    unique: true
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  art_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Artwork',
+    required: true
   },
   review: {
     type: String,
@@ -16,11 +21,12 @@ const RatingSchema = new mongoose.Schema({
     min: 1,
     max: 5
   },
-
-},{ 
-  collection: 'ratings' 
+  created_at: {
+    type: Date,
+    default: Date.now
+  }
+}, {
+  collection: 'ratings'
 });
 
-
-module.exports = mongoose.model('Rating', RatingSchema, 'ratings');
-
+module.exports = mongoose.model('Rating', RatingSchema);

@@ -9,7 +9,7 @@ router.get('/:id', walletController.getWalletById);
 // Route to create a new wallet
 router.post('/', walletController.createWallet);
 // Route to update a wallet by ID
-router.put('/:id', walletController.updateWallet);
+    router.put('/:id', walletController.updateWallet);
 // Route to delete a wallet by ID
 router.delete('/:id', walletController.deleteWallet);
 

@@ -18,7 +18,7 @@ exports.getCategories = async (req, res) => {
 exports.getCategoryById = async (req, res) => {
     try {
         const categoryId = req.params.id;
-        const category = await categoriesService.getCategoryById(parseInt(categoryId));
+        const category = await categoriesService.getCategoryById(categoryId);
         if (!category) {
             return res.status(404).json({
                 success: false,
@@ -56,7 +56,7 @@ exports.updateCategory = async (req, res) => {
     try {
         const categoryId = req.params.id;
         const categoryData = req.body;
-        const updatedCategory = await categoriesService.updateCategory(parseInt(categoryId), categoryData);
+        const updatedCategory = await categoriesService.updateCategory((categoryId), categoryData);
         
         if (!updatedCategory) {
             return res.status(404).json({

@@ -1,83 +1,57 @@
 const User = require('./user.model');
+const AppError = require('../utils/appError.util');
 
+// Get all active (non-deleted) users
 exports.getAllUsers = async () => {
-    try {
-        const users = await User.find({ is_deleted: false });
-        return users;
-    } catch (error) {
-        return { message: 'Error retrieving users', error };
-    }
-}
+    return await User.find({ is_deleted: false });
+};
+
+// Get a user by ID
 exports.getUserById = async (id) => {
-    try {
-        const user = await User.findOne({ user_id: id, is_deleted: false });
-        if (!user) {
-            return { message: 'User not found' };
-        }
-        return user;
-    } catch (error) {
-        return { message: 'Error retrieving user', error };
+    const user = await User.findOne({ _id: id, is_deleted: false }).populate('role', 'name');
+    if (!user) {
+        throw new AppError('User not found', 404);
     }
-}
-exports.createUser = async ({user_id,name,phone_number,email,password,role_id}) => {
-    try {
-        // const { user_id, name, phone_number, email, password, role_id } = req.body;
-        const newUser = new User({
-            user_id,
-            name,
-            phone_number,
-            email,
-            password,
-            role_id
-        });
-        await newUser.save();
-        return newUser;
-    } catch (error) {
-        return { message: 'Error creating user', error };
-    }
-}
+    return user;
+};
 
-exports.updateUser = async (user_id,
-    { name, phone_number, email, password, role_id }) => {
-    try {
-        // const { user_id } = req.params;
-        // const { name, phone_number, email, password, role_id } = req.body;
-        const updatedUser = await User.findOneAndUpdate(
-            { user_id },
-            { name, phone_number, email, password, role_id },
-            { new: true }
-        );
-        if (!updatedUser) {
-            return { message: 'User not found' };
-        }
-        return updatedUser;
-    } catch (error) {
-        return { message: 'Error updating user', error };
-    }
-}
+// Create a new user
+exports.createUser = async ({ name, phone_number, email, password, role }) => {
+    const newUser = new User({ name, phone_number, email, password, role });
+    return await newUser.save();
+};
 
-exports.deleteUser = async (user_id) => {
-    try {
-        // const { user_id } = req.params;
-        const deletedUser = await User.findOneAndUpdate(
-            { user_id },
-            { is_deleted: true, deleted_at: Date.now() },
-            { new: true }
-        );
-        if (!deletedUser) {
-            return { message: 'User not found' };
-        }
-        return deletedUser;
-    } catch (error) {
-        return { message: 'Error deleting user', error };
+// Update an existing user by ID
+exports.updateUser = async (_id, { name, phone_number, email, password, role_id }) => {
+    const updatedUser = await User.findOneAndUpdate(
+        { _id },
+        { name, phone_number, email, password, role_id },
+        { new: true }
+    );
+    if (!updatedUser) {
+        throw new AppError('User not found', 404);
     }
-}
+    return updatedUser;
+};
 
+// Soft delete a user (mark as deleted)
+exports.deleteUser = async (_id) => {
+    const deletedUser = await User.findOneAndUpdate(
+        { _id },
+        { is_deleted: true, deleted_at: new Date() },
+        { new: true }
+    );
+    if (!deletedUser) {
+        throw new AppError('User not found', 404);
+    }
+    return deletedUser;
+};
+
+// Permanently delete a user
 exports.hardDeleteUser = async (id) => {
-    try {
-        const deletedUser = await User.findOneAndDelete({ user_id: id });
-        return deletedUser;
-    } catch (error) {
-        return { message: 'Error deleting user', error };
+    const deletedUser = await User.findOneAndDelete({ _id: id });
+    if (!deletedUser) {
+        throw new AppError('User not found', 404);
     }
-}
+    return deletedUser;
+};

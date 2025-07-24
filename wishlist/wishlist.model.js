@@ -2,17 +2,17 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const wishlistSchema = new Schema({
-  _id: {
-    type: Number,
-    required: true
-  },
+  // _id: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   required: true
+  // },
   user_id: {
-    type: String, // mongoose.Schema.Types.ObjectId, // Change to mongoose.Schema.Types.ObjectId if using ObjectIds
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'User'
   },
   art_id: {
-    type: String, // mongoose.Schema.Types.ObjectId, // Change to mongoose.Schema.Types.ObjectId if using ObjectIds
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'Artwork'
   },

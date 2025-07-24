@@ -1,68 +1,56 @@
 const Order = require('./orders.model');
+const Artwork = require('../artwork/artwork.model');
 
 exports.getAllOrders = async () => {
-    try {
-        const orders = await Order.find({});
-        return orders;
-    } catch (error) {
-        return { message: 'Error retrieving orders', error };
-    }
-}
-exports.getOrderById = async (order_id) => {
-    try {
-        console.log("Looking for order_id:", order_id); // Debug
+  return await Order.find().populate('user_id', 'name').populate('artwork_id', 'title');
+};
 
-        const result = await Order.findOne({ id: order_id });
-        if (!result) {
-            return { message: 'Order not found' };
-        }
-        return result;
-    }
-    catch (error) {
-        console.error('Error retrieving order:', error);
-        return { message: 'Error retrieving order', error };
-    }
-}
-exports.createOrder = async ({ id, user_id, total_amt, status_id, created_at, order_date }) => {
-    try {
-        const newOrder = new Order({
-            id,
-            user_id,
-            total_amt,
-            status_id,
-            created_at,
-            order_date
-        });
-        await newOrder.save();
-        return newOrder;
-    } catch (error) {
-        return { message: 'Error creating order', error };
-    }
-}
-exports.updateOrder = async (id, { user_id, total_amt, status_id, created_at, order_date }) => {
-    try {
-        const updatedOrder = await Order.findOneAndUpdate(
-            { id },
-            { user_id, total_amt, status_id, created_at, order_date },
-            { new: true }
-        );
-        if (!updatedOrder) {
-            return { message: 'Order not found' };
-        }
-        return updatedOrder;
-    } catch (error) {
-        return { message: 'Error updating order', error };
-    }
-}
+exports.getOrderById = async (orderId) => {
+  const order = await Order.findById(orderId).populate('user_id').populate('artwork_id');
+  if (!order) return { message: 'Order not found' };
+  return order;
+};
+
+exports.createOrder = async ({ user_id, artwork_id, total_amt, status_id }) => {
+  const newOrder = new Order({
+    user_id,
+    artwork_id,
+    total_amt,
+    status_id
+  });
+  await newOrder.save();
+  return newOrder;
+};
+
+exports.updateOrder = async (id, updateData) => {
+  const updated = await Order.findByIdAndUpdate(id, updateData, { new: true });
+  if (!updated) return { message: 'Order not found' };
+  return updated;
+};
+
 exports.deleteOrder = async (id) => {
-    try {
-        const deletedOrder = await Order.findOneAndDelete({ id });
-        if (!deletedOrder) {
-            return { message: 'Order not found' };
-        }
-        return deletedOrder;
-    }
-    catch (error) {
-        return { message: 'Error deleting order', error };
-    }
-}
+  const deleted = await Order.findByIdAndDelete(id);
+  if (!deleted) return { message: 'Order not found' };
+  return deleted;
+};
+
+exports.getOrdersByArtist = async (artistId) => {
+  const orders = await Order.find()
+    .populate({
+      path: 'artwork_id',
+      match: { artist: artistId },
+      select: 'title'
+    })
+    .populate('user_id', 'name');
+
+  const filtered = orders
+    .filter(order => order.artwork_id) // artwork matched artist
+    .map(order => ({
+      artworkTitle: order.artwork_id.title,
+      buyerName: order.user_id?.name || 'Unknown',
+      orderDate: order.order_date,
+      totalAmount: order.total_amt
+    }));
+
+  return filtered;
+};

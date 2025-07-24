@@ -1,5 +1,6 @@
 const cartService = require('./cart.service');
 
+// Get all cart items
 exports.getAllCarts = async (req, res) => {
     try {
         const carts = await cartService.getAllCarts();
@@ -7,7 +8,9 @@ exports.getAllCarts = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Error retrieving carts', error });
     }
-}
+};
+
+// Get a specific cart item by ID
 exports.getCartById = async (req, res) => {
     const cart_id = req.params.cart_id;
     try {
@@ -19,16 +22,20 @@ exports.getCartById = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Error retrieving cart', error });
     }
-}
+};
+
+// Add artwork to cart (called from cart icon click)
 exports.createCart = async (req, res) => {
-    const { id, user_id, art_id, quantity } = req.body;
+    const { user_id, art_id, quantity } = req.body;
     try {
-        const newCart = await cartService.createCart({ id, user_id, art_id, quantity });
+        const newCart = await cartService.createCart({ user_id, art_id, quantity });
         res.status(201).json(newCart);
     } catch (error) {
         res.status(500).json({ message: 'Error creating cart', error });
     }
-}
+};
+
+// Update cart item (quantity/artwork)
 exports.updateCart = async (req, res) => {
     const cart_id = req.params.cart_id;
     const { user_id, art_id, quantity } = req.body;
@@ -41,7 +48,9 @@ exports.updateCart = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Error updating cart', error });
     }
-}
+};
+
+// Delete a cart item
 exports.deleteCart = async (req, res) => {
     const cart_id = req.params.cart_id;
     try {
@@ -53,4 +62,4 @@ exports.deleteCart = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Error deleting cart', error });
     }
-}
+};

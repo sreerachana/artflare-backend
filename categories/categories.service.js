@@ -12,7 +12,7 @@ exports.getCategories = async () => {
 };
 
 exports.getCategoryById = async (categoryId) => {
-    const category = await Category.findOne({ id: categoryId });
+    const category = await Category.findOne({ _id: categoryId });
     return category;
 };
 
@@ -24,7 +24,7 @@ exports.createCategory = async (categoryData) => {
 
 exports.updateCategory = async (categoryId, categoryData) => {
     const category = await Category.findOneAndUpdate(
-        { id : categoryId },
+        { _id : categoryId },
         { $set: categoryData },
         { new: true }
     );

@@ -1,183 +1,314 @@
 db.roles.insertMany([
-    { "id": 1, "role_name": "Artist" },
-    { "id": 2, "role_name": "Buyer" },
+    { "id": 1, "role_name": "Creater" },
+    { "id": 2, "role_name": "Customer" },
     { "id": 3, "role_name": "Admin" }
   ]);
 
 //  inserting users
 
   db.users.insertMany([
-    {
-      "user_id": "UUID1", "name": "User1", "phone_number": "9876543200",
-      "email": "user1@example.com", "password": "pass1word",
-      "role_id": 1, "block_status": false, "profile_photo": null,
-      "created_at": ISODate("2025-05-06T00:00:00Z"), "updated_at": ISODate("2025-05-06T00:00:00Z"),
-      "is_deleted": false, "deleted_at": null
-    },
-    {
-      "user_id": "UUID2", "name": "User2", "phone_number": "9876543201",
-      "email": "user2@example.com", "password": "pass2word",
-      "role_id": 2, "block_status": false, "profile_photo": null,
-      "created_at": ISODate("2025-05-06T00:00:00Z"), "updated_at": ISODate("2025-05-06T00:00:00Z"),
-      "is_deleted": false, "deleted_at": null
-    },
-    {
-      "user_id": "UUID3", "name": "User3", "phone_number": "9876543202",
-      "email": "user3@example.com", "password": "pass3word",
-      "role_id": 1, "block_status": true, "profile_photo": null,
-      "created_at": ISODate("2025-05-06T00:00:00Z"), "updated_at": ISODate("2025-05-06T00:00:00Z"),
-      "is_deleted": false, "deleted_at": null
-    },
-    {
-      "user_id": "UUID4", "name": "User4", "phone_number": "9876543203",
-      "email": "user4@example.com", "password": "pass4word",
-      "role_id": 2, "block_status": false, "profile_photo": null,
-      "created_at": ISODate("2025-05-06T00:00:00Z"), "updated_at": ISODate("2025-05-06T00:00:00Z"),
-      "is_deleted": false, "deleted_at": null
-    },
-    {
-      "user_id": "UUID5", "name": "User5", "phone_number": "9876543204",
-      "email": "user5@example.com", "password": "pass5word",
-      "role_id": 1, "block_status": false, "profile_photo": null,
-      "created_at": ISODate("2025-05-06T00:00:00Z"), "updated_at": ISODate("2025-05-06T00:00:00Z"),
-      "is_deleted": false, "deleted_at": null
-    },
-    {
-      "user_id": "UUID6", "name": "User6", "phone_number": "9876543205",
-      "email": "user6@example.com", "password": "pass6word",
-      "role_id": 2, "block_status": false, "profile_photo": null,
-      "created_at": ISODate("2025-05-06T00:00:00Z"), "updated_at": ISODate("2025-05-06T00:00:00Z"),
-      "is_deleted": false, "deleted_at": null
-    },
-    {
-      "user_id": "UUID7", "name": "User7", "phone_number": "9876543206",
-      "email": "user7@example.com", "password": "pass7word",
-      "role_id": 1, "block_status": true, "profile_photo": null,
-      "created_at": ISODate("2025-05-06T00:00:00Z"), "updated_at": ISODate("2025-05-06T00:00:00Z"),
-      "is_deleted": false, "deleted_at": null
-    },
-    {
-      "user_id": "UUID8", "name": "User8", "phone_number": "9876543207",
-      "email": "user8@example.com", "password": "pass8word",
-      "role_id": 2, "block_status": false, "profile_photo": null,
-      "created_at": ISODate("2025-05-06T00:00:00Z"), "updated_at": ISODate("2025-05-06T00:00:00Z"),
-      "is_deleted": false, "deleted_at": null
-    },
-    {
-      "user_id": "UUID9", "name": "User9", "phone_number": "9876543208",
-      "email": "user9@example.com", "password": "pass9word",
-      "role_id": 1, "block_status": false, "profile_photo": null,
-      "created_at": ISODate("2025-05-06T00:00:00Z"), "updated_at": ISODate("2025-05-06T00:00:00Z"),
-      "is_deleted": false, "deleted_at": null
-    },
-    {
-      "user_id": "UUID10", "name": "User10", "phone_number": "9876543209",
-      "email": "user10@example.com", "password": "pass10word",
-      "role_id": 2, "block_status": false, "profile_photo": null,
-      "created_at": ISODate("2025-05-06T00:00:00Z"), "updated_at": ISODate("2025-05-06T00:00:00Z"),
-      "is_deleted": false, "deleted_at": null
-    }
-  ]);
+  {
+    name: "Admin User",
+    phone_number: "9999999999",
+    email: "admin@example.com",
+    password: "$2b$10$MTTzGcPyli2Hpo5fp1wsmOG5gv9byzxkxWx61EcfzBRfg68kUWeHe",
+    role: ["admin"],
+    block_status: false,
+    profile_photo: null,
+    reset_code: null,
+    reset_code_expiry: null,
+    is_deleted: false,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    name: "Customer One",
+    phone_number: "9000000001",
+    email: "customer1@example.com",
+    password: "$2b$10$MTTzGcPyli2Hpo5fp1wsmOG5gv9byzxkxWx61EcfzBRfg68kUWeHe",
+    role: ["customer"],
+    block_status: false,
+    profile_photo: null,
+    reset_code: null,
+    reset_code_expiry: null,
+    is_deleted: false,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    name: "Customer Two",
+    phone_number: "9000000002",
+    email: "customer2@example.com",
+    password: "$2b$10$MTTzGcPyli2Hpo5fp1wsmOG5gv9byzxkxWx61EcfzBRfg68kUWeHe",
+    role: ["customer"],
+    block_status: false,
+    profile_photo: null,
+    reset_code: null,
+    reset_code_expiry: null,
+    is_deleted: false,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    name: "Customer Three",
+    phone_number: "9000000003",
+    email: "customer3@example.com",
+    password: "$2b$10$MTTzGcPyli2Hpo5fp1wsmOG5gv9byzxkxWx61EcfzBRfg68kUWeHe",
+    role: ["customer"],
+    block_status: false,
+    profile_photo: null,
+    reset_code: null,
+    reset_code_expiry: null,
+    is_deleted: false,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    name: "Customer Four",
+    phone_number: "9000000004",
+    email: "customer4@example.com",
+    password: "$2b$10$MTTzGcPyli2Hpo5fp1wsmOG5gv9byzxkxWx61EcfzBRfg68kUWeHe",
+    role: ["customer"],
+    block_status: false,
+    profile_photo: null,
+    reset_code: null,
+    reset_code_expiry: null,
+    is_deleted: false,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    name: "Creator One",
+    phone_number: "9000000011",
+    email: "creator1@example.com",
+    password: "$2b$10$MTTzGcPyli2Hpo5fp1wsmOG5gv9byzxkxWx61EcfzBRfg68kUWeHe",
+    role: ["creator"],
+    block_status: false,
+    profile_photo: null,
+    reset_code: null,
+    reset_code_expiry: null,
+    is_deleted: false,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    name: "Creator Two",
+    phone_number: "9000000012",
+    email: "creator2@example.com",
+    password: "$2b$10$MTTzGcPyli2Hpo5fp1wsmOG5gv9byzxkxWx61EcfzBRfg68kUWeHe",
+    role: ["creator"],
+    block_status: false,
+    profile_photo: null,
+    reset_code: null,
+    reset_code_expiry: null,
+    is_deleted: false,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }
+]);
+
 
 
 // inserting categories
 db.categories.insertMany([
-    { "id": 1, "category": "Painting" },
-    { "id": 2, "category": "Sketch" },
-    { "id": 3, "category": "Digital Art" },
-    { "id": 4, "category": "Sculpture" },
-    { "id": 5, "category": "Photography" },
-    { "id": 6, "category": "Illustration" },
-    { "id": 7, "category": "Abstract" },
-    { "id": 8, "category": "Modern" },
-    { "id": 9, "category": "Classic" },
-    { "id": 10, "category": "Fantasy" }
-  ]);
+  {
+    name: "Abstract",
+    description: "Non-representational art that uses shapes, colors, and forms.",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    name: "Classic",
+    description: "Traditional styles of fine art from historical periods.",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    name: "Nature",
+    description: "Artwork that features landscapes, wildlife, and natural elements.",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    name: "Fantasy",
+    description: "Imaginative scenes featuring mythical creatures and dream worlds.",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    name: "Digital",
+    description: "Art created using digital tools and software.",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    name: "Portrait",
+    description: "Art focused on capturing the likeness of a person or group.",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    name: "Surrealism",
+    description: "Dream-like, bizarre imagery inspired by subconscious thought.",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    name: "Minimalism",
+    description: "Simplicity in design with minimal color and form.",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    name: "Pop Art",
+    description: "Art influenced by popular culture and mass media.",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    name: "Photography",
+    description: "Captured visuals of moments, people, or landscapes.",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }
+]);
+
   
 
 // inserting artworks
 db.artworks.insertMany([
-    {
-      "id": 1, "artist_id": "UUID3", "art_name": "ArtPiece1",
-      "art_image": null, "pricing": 872.52,
-      "description": "Description for ArtPiece1",
-      "created_at": ISODate("2025-05-06T00:00:00Z"),
-      "rating": 2.4, "updated_date": ISODate("2025-05-06T00:00:00Z"),
-      "quantity": 5, "category_id": 1, "payment_id": null
-    },
-    {
-      "id": 2, "artist_id": "UUID5", "art_name": "ArtPiece2",
-      "art_image": null, "pricing": 1200.00,
-      "description": "Description for ArtPiece2",
-      "created_at": ISODate("2025-05-06T00:00:00Z"),
-      "rating": 3.8, "updated_date": ISODate("2025-05-06T00:00:00Z"),
-      "quantity": 3, "category_id": 2, "payment_id": null
-    },
-    {
-      "id": 3, "artist_id": "UUID1", "art_name": "ArtPiece3",
-      "art_image": null, "pricing": 452.00,
-      "description": "Description for ArtPiece3",
-      "created_at": ISODate("2025-05-06T00:00:00Z"),
-      "rating": 4.5, "updated_date": ISODate("2025-05-06T00:00:00Z"),
-      "quantity": 2, "category_id": 3, "payment_id": null
-    },
-    {
-      "id": 4, "artist_id": "UUID6", "art_name": "ArtPiece4",
-      "art_image": null, "pricing": 999.99,
-      "description": "Description for ArtPiece4",
-      "created_at": ISODate("2025-05-06T00:00:00Z"),
-      "rating": 1.9, "updated_date": ISODate("2025-05-06T00:00:00Z"),
-      "quantity": 10, "category_id": 1, "payment_id": null
-    },
-    {
-      "id": 5, "artist_id": "UUID2", "art_name": "ArtPiece5",
-      "art_image": null, "pricing": 745.75,
-      "description": "Description for ArtPiece5",
-      "created_at": ISODate("2025-05-06T00:00:00Z"),
-      "rating": 3.2, "updated_date": ISODate("2025-05-06T00:00:00Z"),
-      "quantity": 1, "category_id": 2, "payment_id": null
-    },
-    {
-      "id": 6, "artist_id": "UUID7", "art_name": "ArtPiece6",
-      "art_image": null, "pricing": 300.10,
-      "description": "Description for ArtPiece6",
-      "created_at": ISODate("2025-05-06T00:00:00Z"),
-      "rating": 4.9, "updated_date": ISODate("2025-05-06T00:00:00Z"),
-      "quantity": 4, "category_id": 3, "payment_id": null
-    },
-    {
-      "id": 7, "artist_id": "UUID9", "art_name": "ArtPiece7",
-      "art_image": null, "pricing": 580.00,
-      "description": "Description for ArtPiece7",
-      "created_at": ISODate("2025-05-06T00:00:00Z"),
-      "rating": 2.0, "updated_date": ISODate("2025-05-06T00:00:00Z"),
-      "quantity": 6, "category_id": 1, "payment_id": null
-    },
-    {
-      "id": 8, "artist_id": "UUID4", "art_name": "ArtPiece8",
-      "art_image": null, "pricing": 1100.00,
-      "description": "Description for ArtPiece8",
-      "created_at": ISODate("2025-05-06T00:00:00Z"),
-      "rating": 3.7, "updated_date": ISODate("2025-05-06T00:00:00Z"),
-      "quantity": 8, "category_id": 2, "payment_id": null
-    },
-    {
-      "id": 9, "artist_id": "UUID10", "art_name": "ArtPiece9",
-      "art_image": null, "pricing": 250.00,
-      "description": "Description for ArtPiece9",
-      "created_at": ISODate("2025-05-06T00:00:00Z"),
-      "rating": 4.3, "updated_date": ISODate("2025-05-06T00:00:00Z"),
-      "quantity": 2, "category_id": 3, "payment_id": null
-    },
-    {
-      "id": 10, "artist_id": "UUID8", "art_name": "ArtPiece10",
-      "art_image": null, "pricing": 675.30,
-      "description": "Description for ArtPiece10",
-      "created_at": ISODate("2025-05-06T00:00:00Z"),
-      "rating": 3.5, "updated_date": ISODate("2025-05-06T00:00:00Z"),
-      "quantity": 7, "category_id": 1, "payment_id": null
-    }
-  ]);
+  {
+    artist_id: "6867c1a8fc6e49d3dad305f3",
+    art_name: "Starry Night",
+    art_image: "/artworks/starry_night.jpeg",
+    pricing: 1500,
+    description: "A dreamy night sky with swirling stars inspired by Van Gogh.",
+    rating: 4.8,
+    quantity: 10,
+    category_id: "68667e22d310e610f8a05f03",
+    payment_id: null,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    artist_id: "6867c1a8fc6e49d3dad305f3",
+    art_name: "Sunset Overdrive",
+    art_image: "/artworks/sunset_drive.jpeg",
+    pricing: 800,
+    description: "A beautiful sunset over a mountain valley.",
+    rating: 4.5,
+    quantity: 5,
+    category_id: "68667e22d310e610f8a05f04",
+    payment_id: null,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    artist_id: "6867c1a8fc6e49d3dad305f3",
+    art_name: "Digital Bloom",
+    art_image: "/artworks/digital_bloom.jpeg",
+    pricing: 650,
+    description: "A vibrant explosion of digital flowers.",
+    rating: 4.2,
+    quantity: 8,
+    category_id: "68667e22d310e610f8a05f05",
+    payment_id: null,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    artist_id: "6867c1bcfc6e49d3dad305f5",
+    art_name: "The Abstract Eye",
+    art_image: "/artworks/abstract_eye.jpeg",
+    pricing: 1200,
+    description: "An abstract piece portraying vision and perception.",
+    rating: 4.9,
+    quantity: 2,
+    category_id: "68667e22d310e610f8a05f06",
+    payment_id: null,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    artist_id: "6867c1bcfc6e49d3dad305f5",
+    art_name: "Fantasy Realms",
+    art_image: "/artworks/fantasy_realms.jpeg",
+    pricing: 2000,
+    description: "A majestic depiction of a fantasy landscape.",
+    rating: 5.0,
+    quantity: 4,
+    category_id: "68667e22d310e610f8a05f07",
+    payment_id: null,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    artist_id: "6867c1bcfc6e49d3dad305f5",
+    art_name: "Ocean Deep",
+    art_image: "/artworks/ocean_deep.jpeg",
+    pricing: 900,
+    description: "A deep sea exploration of blues and marine life.",
+    rating: 4.6,
+    quantity: 6,
+    category_id: "68667e22d310e610f8a05f08",
+    payment_id: null,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    artist_id: "6867c1c7fc6e49d3dad305f7",
+    art_name: "The Lonely Tree",
+    art_image: "/artworks/lonely_tree.jpeg",
+    pricing: 750,
+    description: "A solitary tree standing in an open field.",
+    rating: 4.1,
+    quantity: 3,
+    category_id: "68667e22d310e610f8a05f09",
+    payment_id: null,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    artist_id: "6867c1c7fc6e49d3dad305f7",
+    art_name: "City Lights",
+    art_image: "/artworks/city_lights.jpeg",
+    pricing: 1300,
+    description: "Night-time cityscape with glowing lights.",
+    rating: 4.4,
+    quantity: 9,
+    category_id: "68667e22d310e610f8a05f0a",
+    payment_id: null,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    artist_id: "6867c1c7fc6e49d3dad305f7",
+    art_name: "Mind Maze",
+    art_image: "/artworks/mind_maze.jpeg",
+    pricing: 1100,
+    description: "A complex, mind-bending artwork with patterns and puzzles.",
+    rating: 4.7,
+    quantity: 7,
+    category_id: "68667e22d310e610f8a05f0b",
+    payment_id: null,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    artist_id: "6867c1c7fc6e49d3dad305f7",
+    art_name: "Aurora Dreams",
+    art_image: "/artworks/aurora_dreams.jpeg",
+    pricing: 1800,
+    description: "A magical aurora borealis in the northern skies.",
+    rating: 4.9,
+    quantity: 5,
+    category_id: "68667e22d310e610f8a05f0c",
+    payment_id: null,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }
+]);
+
 
   
 // inserting orders
@@ -582,5 +713,63 @@ db.ratings.insertMany([
   ]
   );  
   
+  db.notifications.insertMany([
+  {
+    id: 1,
+    user_id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479', // Sample UUID
+    title: 'Your Order Has Been Shipped!',
+    message: 'Order #1023 is now on its way. Track your shipment in the Orders section.',
+    type: 'ORDER_UPDATE',
+    is_read: false,
+    related_id: 1023, // order_id
+    created_at: new Date('2025-06-16T09:30:00Z'),
+    updated_at: new Date('2025-06-16T09:30:00Z')
+  },
+  {
+    id: 2,
+    user_id: 'a2b6c7d8-90ef-1234-abcd-5678efghijkl',
+    title: '₹500 Added to Your Wallet',
+    message: 'You received ₹500 from your recent artwork sale!',
+    type: 'WALLET',
+    is_read: false,
+    related_id: null,
+    created_at: new Date('2025-06-15T12:00:00Z'),
+    updated_at: new Date('2025-06-15T12:00:00Z')
+  },
+  {
+    id: 3,
+    user_id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+    title: 'Artwork Sold!',
+    message: 'Your artwork "Golden Horizon" has been purchased.',
+    type: 'ARTWORK_SOLD',
+    is_read: true,
+    related_id: 78, // artwork ID
+    created_at: new Date('2025-06-14T17:45:00Z'),
+    updated_at: new Date('2025-06-14T18:00:00Z')
+  },
+  {
+    id: 4,
+    user_id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+    title: 'Special Offer on Digital Art!',
+    message: 'Get 20% off all digital artworks till June 20.',
+    type: 'PROMOTION',
+    is_read: false,
+    related_id: null,
+    created_at: new Date('2025-06-13T10:15:00Z'),
+    updated_at: new Date('2025-06-13T10:15:00Z')
+  },
+  {
+    id: 5,
+    user_id: 'a2b6c7d8-90ef-1234-abcd-5678efghijkl',
+    title: 'System Maintenance Notification',
+    message: 'Our platform will undergo maintenance on June 18 from 2 AM to 4 AM.',
+    type: 'SYSTEM',
+    is_read: true,
+    related_id: null,
+    created_at: new Date('2025-06-12T08:00:00Z'),
+    updated_at: new Date('2025-06-12T08:00:00Z')
+  }
+]
+);
 
 // 

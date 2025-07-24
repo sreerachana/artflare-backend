@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
-  id: {
-    type: Number,
-    required: true,
-    unique: true
-  },
   user_id: {
-    type: String, // UUID stored as a string
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  artwork_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Artwork',
     required: true
   },
   total_amt: {
@@ -16,17 +17,17 @@ const orderSchema = new mongoose.Schema({
     min: 0
   },
   status_id: {
-    type: String, // Assuming "SHIPPING", "DELIVERED", etc.
-    required: true,
-    enum: ['PENDING', 'SHIPPING', 'DELIVERED', 'CANCELLED'] // update as needed
+    type: String,
+    enum: ['PENDING', 'SHIPPING', 'DELIVERED', 'CANCELLED'],
+    default: 'PENDING'
+  },
+  order_date: {
+    type: Date,
+    default: Date.now
   },
   created_at: {
     type: Date,
     default: Date.now
-  },
-  order_date: {
-    type: Date,
-    required: true
   }
 });
 

@@ -1,68 +1,145 @@
 const artworkService = require('./artwork.service');
+const { validationResult } = require('express-validator');
+const AppError = require('../utils/appError.util');
+const sendResponse = require('../utils/sendResponse.utils');
 
-exports.getAllArtworks = async (req, res) => {
-    try {
-        const artworks = await artworkService.getAllArtworks();
-        res.status(200).json(artworks);
-    } catch (error) {
-        res.status(500).json({ message: 'Error retrieving artworks', error });
-    }
-}
-exports.getArtworkById = async (req, res) => {
-    try {
-        const { artwork_id } = req.params;
-        console.log('Received ID:', req.params.id, artwork_id);
-        const artwork = await artworkService.getArtworkById(artwork_id);        
-        
-        if (artwork.message) {
-            return res.status(404).json(artwork);
-        }
-        res.status(200).json(artwork);
-    } catch (error) {
-        res.status(500).json({ message: 'Error retrieving artwork', error });
-    }
-}
-exports.createArtwork = async (req, res) => {
-    try {
-        const { id, artist_id, art_name, art_image, pricing, description, rating, quantity, category_id } = req.body;
-        const newArtwork = await artworkService.createArtwork({ id, artist_id, art_name, art_image, pricing, description, rating, quantity, category_id });
-        res.status(201).json(newArtwork);
-    } catch (error) {
-        res.status(500).json({ message: 'Error creating artwork', error: error.message });
-    }
-}
-exports.updateArtwork = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { artist_id, art_name, art_image, pricing, description, rating, quantity, category_id } = req.body;
-        const updatedArtwork = await artworkService.updateArtwork(id, { artist_id, art_name, art_image, pricing, description, rating, quantity, category_id });
-        if (updatedArtwork.message) {
-            return res.status(404).json(updatedArtwork);
-        }
-        res.status(200).json(updatedArtwork);
-    } catch (error) {
-        res.status(500).json({ message: 'Error updating artwork', error });
-    }
-}
-exports.deleteArtwork = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const deletedArtwork = await artworkService.deleteArtwork(id);
-        if (deletedArtwork.message) {
-            return res.status(404).json(deletedArtwork);
-        }
-        res.status(200).json(deletedArtwork);
-    } catch (error) {
-        res.status(500).json({ message: 'Error deleting artwork', error });
-    }
-    // controllers/artworkController.js
-
-exports.getByArtist = async (req, res) => {
+// Get all artworks
+exports.getAllArtworks = async (req, res, next) => {
   try {
-    const artworks = await artworks.find({ artist: req.params.artistId });
-    res.json(artworks);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    const artworks = await artworkService.getAllArtworks();
+    return sendResponse(res, 200, true, 'Artworks fetched successfully', artworks);
+  } catch (error) {
+    next(error);
   }
 };
-}
+
+// Get artwork by ID
+exports.getArtworkById = async (req, res, next) => {
+  try {
+    const artwork = await artworkService.getArtworkById(req.params.id);
+    return sendResponse(res, 200, true, 'Artwork fetched successfully', artwork);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get artworks by artist ID
+exports.getArtworksByArtistId = async (req, res, next) => {
+  try {
+    const { artist_id } = req.params;
+    if (!artist_id) {
+      throw new AppError('Artist ID is required', 400);
+    }
+
+    const artworks = await artworkService.getArtworksByArtistId(artist_id);
+    return sendResponse(res, 200, true, 'Artworks by artist fetched successfully', artworks);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Create new artwork
+exports.createArtwork = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      throw new AppError('Validation failed', 422, errors.array());
+    }
+
+    const {
+      artist_id,
+      art_name,
+      description,
+      pricing,
+      quantity,
+      category_id
+    } = req.body;
+
+    if (!art_name || !description || !pricing || !quantity || !category_id) {
+      throw new AppError('All fields are required', 400);
+    }
+
+    const art_image = req.file ? req.file.filename : '/artworks/default_artwork.jpeg';
+
+    const artworkData = {
+      artist_id,
+      art_name,
+      description,
+      pricing,
+      quantity,
+      category_id,
+      art_image,
+      rating: 0
+    };
+
+    const createdArtwork = await artworkService.createArtwork(artworkData);
+    return sendResponse(res, 201, true, 'Artwork created successfully', createdArtwork);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Update artwork
+exports.updateArtwork = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const {
+      artist_id,
+      art_name,
+      art_image,
+      pricing,
+      description,
+      rating,
+      quantity,
+      category_id
+    } = req.body;
+
+    const updatedArtwork = await artworkService.updateArtwork(id, {
+      artist_id,
+      art_name,
+      art_image,
+      pricing,
+      description,
+      rating,
+      quantity,
+      category_id
+    });
+
+    return sendResponse(res, 200, true, 'Artwork updated successfully', updatedArtwork);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Soft delete artwork
+exports.deleteArtwork = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const deletedArtwork = await artworkService.deleteArtwork(id);
+    return sendResponse(res, 200, true, 'Artwork deleted successfully', deletedArtwork);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Filter artworks
+exports.filterArtworks = async (req, res, next) => {
+  try {
+    const filters = {
+      categoryId: req.query.category_id,
+      minPrice: req.query.min_price,
+      maxPrice: req.query.max_price,
+      minRating: req.query.min_rating,
+      searchQuery: req.query.search
+    };
+
+    const { page = 1, limit = 10 } = req.query;
+    const pagination = { page: parseInt(page), limit: parseInt(limit) };
+
+    const artworks = await artworkService.filterArtworks(filters, pagination);
+
+    return sendResponse(res, 200, true, 'Artworks retrieved successfully', artworks);
+  } catch (error) {
+    next(error);
+  }
+};

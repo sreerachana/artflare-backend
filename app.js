@@ -2,6 +2,7 @@ const express = require('express');
 const connectDB = require('./config/mongoose');
 const path = require('path');
 const dotenv = require('dotenv');
+const errorHandler = require('./middlewares/errorHandler');
 
 // app.js or server.js
 const cors = require('cors');
@@ -37,6 +38,7 @@ const orderitemsRoute = require('./orderitems/orderitems.routes');
 const rolesRoute = require('./roles/roles.routes');
 const wishlistRoute = require('./wishlist/wishlist.routes');
 const walletRoute = require('./wallet/wallet.routes');
+const notificationRoute = require('./notification/notification.routes');
 app.use('/api', require('./home/home.routes'));
 
 
@@ -53,7 +55,8 @@ app.use('/api/rating', ratingRoute);// rating route
 app.use('/api/orderitems', orderitemsRoute);// orderitems route 
 app.use('/api/roles', rolesRoute);// roles route
 app.use('/api/wishlist', wishlistRoute);// wishlist route
-app.use('/api/wallet',walletRoute)
+app.use('/api/wallet',walletRoute);
+app.use('/api/notification', notificationRoute);// notification route
 // app.use('/api/auth',require('./auth/auth.routes')); // auth route
 //app.use('/api/properties',require('./properties/properties.routes')); // properties route
 
@@ -68,5 +71,7 @@ app.all(/.*/, (req, res) => {
     res.status(404).send('Not Found');
 }
 );
+
+app.use(errorHandler);
 
 module.exports = app;

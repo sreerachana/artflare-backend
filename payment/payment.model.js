@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 
 const paymentSchema = new mongoose.Schema({
   id: {
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
     unique: true
   },
   order_id: {
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
     required: true
   },
   payment_amt: {
@@ -16,7 +16,8 @@ const paymentSchema = new mongoose.Schema({
     min: 0
   },
   status_id: {
-    type: String, // e.g., "SHIPPING", "PAID", etc.
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'PaymentStatus',
     required: true
   },
   created_at: {

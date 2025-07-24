@@ -35,7 +35,7 @@ exports.createWallet = async (_id, artist_id, balance) => {
 }
 exports.updateWallet = async (id, balance) => {
     try {
-        console.log('Updating wallet with ID:', id);
+        // console.log('Updating wallet with ID:', id);
         const updatedWallet = await walletModel.findOneAndUpdate(
             {_id: id},
             { balance },

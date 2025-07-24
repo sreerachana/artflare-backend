@@ -1,59 +1,22 @@
 const Rating = require('./rating.model');
 
 exports.getAllRatings = async () => {
-    try {
-        const ratings = await Rating.find({});
-        return ratings;
-    } catch (error) {
-        throw new Error('Error retrieving ratings');
-    }
-}
-exports.getRatingById = async (rating_id) => {
-    try {
-        const rating = await Rating.findOne({'review_id': rating_id});
-        if (!rating) {
-            return { message: 'Rating not found' };
-        }
-        return rating;
-    }
-    catch (error) {
-        throw new Error('Error retrieving rating');
-    }
-}
-exports.createRating = async (ratingData) => {
-    try {
-        const newRating = new Rating(ratingData);
-        await newRating.save();
-        return newRating;
-    } catch (error) {
-        throw new Error('Error creating rating');
-    }
-}
-exports.updateRating = async (rating_id, ratingData) => {
-    try {
-        const updatedRating = await Rating.findOneAndUpdate(
-            {'review_id':rating_id},
-            ratingData,
-            { new: true }
-        );
-        if (!updatedRating) {
-            return { message: 'Rating not found' };
-        }
-        return updatedRating;
-    }
-    catch (error) {
-        throw new Error('Error updating rating');
-    }
-}
-exports.deleteRating = async (rating_id) => {
-    try {
-        const deletedRating = await Rating.findOneAndDelete({review_id: rating_id});
-        if (!deletedRating) {
-            return { message: 'Rating not found' };
-        }
-        return deletedRating;
-    } catch (error) {
-        throw new Error('Error deleting rating');
-    }
-}
- 
+  return await Rating.find().populate('user_id', 'name').populate('art_id', 'art_name');
+};
+
+exports.getRatingById = async (id) => {
+  return await Rating.findById(id).populate('user_id', 'name').populate('art_id', 'art_name');
+};
+
+exports.createRating = async (data) => {
+  const rating = new Rating(data);
+  return await rating.save();
+};
+
+exports.updateRating = async (id, data) => {
+  return await Rating.findByIdAndUpdate(id, data, { new: true });
+};
+
+exports.deleteRating = async (id) => {
+  return await Rating.findByIdAndDelete(id);
+};
