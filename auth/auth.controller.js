@@ -21,6 +21,7 @@ exports.login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
         const { user, token } = await authService.login(email, password);
+        console.log(user, token)
 
         return sendResponse(res, 200, true, 'User logged in successfully', { user, token });
     } catch (error) {

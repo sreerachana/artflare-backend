@@ -1,10 +1,12 @@
 const Artwork = require('./artwork.model');
 const AppError = require('../utils/appError.util');
+const Category = require('../categories/categories.model');
 
 // Get all artworks (non-deleted if applicable)
 exports.getAllArtworks = async () => {
-  return await Artwork.find({ is_deleted: false });
+  return await Artwork.find({ is_deleted: false }).populate('category_id');
 };
+
 
 // Get a single artwork by ID
 exports.getArtworkById = async (id) => {
@@ -23,6 +25,19 @@ exports.getArtworksByArtistId = async (artistId) => {
 
 // Create a new artwork
 exports.createArtwork = async (data) => {
+  console.log('Incoming artwork data:', data);
+
+  const category = await Category.findOne({ name: data.category_id});
+  console.log(category);
+
+  if (!category) {
+    const error = new Error(`Category '${data.category_id}' not found`);
+    error.statusCode = 400;
+    throw error;
+  }
+
+  data.category_id = category._id;
+
   const newArtwork = new Artwork(data);
   return await newArtwork.save();
 };
@@ -107,4 +122,20 @@ exports.filterArtworks = async (filters, pagination) => {
       hasPrevPage: result.hasPrevPage
     }
   };
+};
+
+exports.getFeaturedArtworks = async () => {
+  return await Artwork.find({ is_featured: true }).sort({ createdAt: -1 });
+};
+
+exports.getPopularArtworks = async () => {
+  return await Artwork.find({ is_popular: true }).sort({ createdAt: -1 });
+};
+
+exports.getNewArtworks = async () => {
+  return await Artwork.find({}).sort({ createdAt: -1 }).limit(10);
+}
+
+exports.getArtworksByCategory = async (category) => {
+  return await Artwork.find({ category: category, is_deleted: false });
 };

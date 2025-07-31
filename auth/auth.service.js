@@ -1,13 +1,19 @@
 const User = require('../users/user.model');
+const Role = require('../roles/roles.model');
 const { comparePassword, generateToken } = require('./auth.util');
 
 const AppError = require('../utils/appError.util');
 
 // Register a new user
-exports.register = async (name, phone_number, email, password, role = 'user') => {
+exports.register = async (name, phone_number, email, password, role = 'Customer') => {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
         throw new AppError('User already exists', 400);
+    }
+
+    const roleDoc = await Role.findOne({ role_name: role.toLowerCase() });
+    if (!roleDoc) {
+        throw new AppError(`Role "${role}" not found`, 400);
     }
 
     const newUser = new User({
@@ -15,7 +21,7 @@ exports.register = async (name, phone_number, email, password, role = 'user') =>
         phone_number,
         email,
         password,
-        role,
+        role: [roleDoc._id],
     });
 
     return await newUser.save();
@@ -23,7 +29,9 @@ exports.register = async (name, phone_number, email, password, role = 'user') =>
 
 // Login existing user
 exports.login = async (email, password) => {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).populate('role');
+    // console.log(user);
+
     if (!user) {
         throw new AppError('User not found', 404);
     }
@@ -33,23 +41,31 @@ exports.login = async (email, password) => {
         throw new AppError('Invalid password', 401);
     }
 
+    // Map all role names from populated role array
+    const roleNames = Array.isArray(user.role)
+        ? user.role.map((r) => r.role_name)
+        : [];
+
     const payload = {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role,
+        roles: roleNames, 
     };
 
     const token = generateToken(payload);
 
     const sanitizedUser = {
+        id: user.id,
         name: user.name,
-        role: user.role,
+        roles: roleNames, 
         email: user.email,
     };
 
     return { user: sanitizedUser, token };
 };
+
+
 
 // Find user by email
 exports.findUserByEmail = async (email) => {

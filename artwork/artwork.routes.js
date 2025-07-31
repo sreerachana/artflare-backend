@@ -8,6 +8,8 @@ const authorize = require('../middlewares/authorize');
 
 router.get('/', artworkController.getAllArtworks);
 
+
+
 router.get('/:id', artworkController.getArtworkById);
 
 router.post('/', authenticate,  artworkController.createArtwork); //authorize('creator'),
@@ -19,6 +21,14 @@ router.delete('/:id',  authenticate, artworkController.deleteArtwork);
 router.get('/artist/:artist_id', authenticate, artworkController.getArtworksByArtistId);
 
 router.get('/explore/filter', artworkController.filterArtworks);
+
+router.get('/all/featured', artworkController.getFeaturedArtworks);
+
+router.get('/all/popular', artworkController.getPopularArtworks);
+
+router.get('/all/new-arrivals', artworkController.getNewArtworks);
+
+
 
 module.exports = router;
 

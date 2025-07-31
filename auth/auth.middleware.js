@@ -1,16 +1,22 @@
 // const jwt = require('jsonwebtoken');
+// const AppError = require('../utils/appError.util');
 
-// function authenticateToken(req, res, next) {
-//   const authHeader = req.headers['authorization'];
-//   const token = authHeader && authHeader.split(' ')[1];
+// const authenticate = (req, res, next) => {
+//   const authHeader = req.headers.authorization;
+//   if (!authHeader || !authHeader.startsWith('Bearer ')) {
+//     return next(new AppError('Token not provided', 401));
+//   }
 
-//   if (!token) return res.sendStatus(401);
+//   const token = authHeader.split(' ')[1];
 
-//   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-//     if (err) return res.sendStatus(403);
-//     req.user = user;
+//   try {
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//     req.user = decoded;
 //     next();
-//   });
-// }
+//   } catch (err) {
+//     console.error("JWT error:", err.message);
+//     return next(new AppError('Invalid or expired token', 401));
+//   }
+// };
 
-// module.exports = { authenticateToken };
+// module.exports = authenticate;

@@ -15,6 +15,11 @@ exports.registerValidation = [
     body('phone_number')
         .matches(/^\d{10}$/)
         .withMessage('Phone must be 10 digits'),
+
+    body('role')
+        .optional()
+        .isIn(['Customer', 'Creator', 'Admin'])
+        .withMessage('Role must be one of: Customer, Artist, Admin'),
 ];
 exports.loginValidation = [
     body('email')

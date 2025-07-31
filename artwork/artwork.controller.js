@@ -45,9 +45,10 @@ exports.createArtwork = async (req, res, next) => {
     if (!errors.isEmpty()) {
       throw new AppError('Validation failed', 422, errors.array());
     }
-
+``
+    const artist_id = req.user.id;
+    
     const {
-      artist_id,
       art_name,
       description,
       pricing,
@@ -143,3 +144,31 @@ exports.filterArtworks = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getFeaturedArtworks = async (req, res, next) => {
+  try {
+    const artworks = await artworkService.getFeaturedArtworks();
+    return sendResponse(res, 200, true, 'Featured artworks retrieved', artworks);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getPopularArtworks = async (req, res, next) => {
+  try {
+    const artworks = await artworkService.getPopularArtworks();
+    return sendResponse(res, 200, true, 'Popular artworks retrieved', artworks);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getNewArtworks = async (req, res, next) => {
+  try {
+    const artworks = await artworkService.getNewArtworks();
+    return sendResponse(res, 200, true, 'New artworks retrieved', artworks);
+  } catch (error) {
+    next(error);
+  }
+};
+

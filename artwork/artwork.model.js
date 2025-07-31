@@ -37,6 +37,14 @@ const artworkSchema = new mongoose.Schema(
       required: true,
       min: 0
     },
+    is_featured: {
+      type: Boolean,
+      default: false
+    },
+    is_popular:{
+      type: Boolean,
+      default: false
+    },
     category_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Category',
@@ -49,7 +57,11 @@ const artworkSchema = new mongoose.Schema(
     is_deleted: {
     type: Boolean,
     default: false
-  },
+    },
+    is_new: {
+      type: Boolean,
+      default: true
+    }
   },
   
   {

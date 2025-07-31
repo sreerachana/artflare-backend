@@ -46,17 +46,17 @@ app.use('/api', require('./home/home.routes'));
 app.use('/api', homeRoute);// homepage route
 app.use('/api/auth', authRoute);// auth route
 app.use('/api/categories', categoriesRoute);// categories route
-app.use('/api/users', usersRoute);// users route
-app.use('/api/artwork', artworkRoute);// artwork route
+app.use('/api/user', usersRoute);// users route
+app.use('/api/artworks', artworkRoute);// artwork route
 app.use('/api/orders', ordersRoute);// orders route
 app.use('/api/cart', cartRoute);// cart route
-app.use('/api/payment', paymentRoute);// payment route
+app.use('/api/payments', paymentRoute);// payment route
 app.use('/api/rating', ratingRoute);// rating route
 app.use('/api/orderitems', orderitemsRoute);// orderitems route 
 app.use('/api/roles', rolesRoute);// roles route
 app.use('/api/wishlist', wishlistRoute);// wishlist route
 app.use('/api/wallet',walletRoute);
-app.use('/api/notification', notificationRoute);// notification route
+app.use('/api/notifications', notificationRoute);// notification route
 // app.use('/api/auth',require('./auth/auth.routes')); // auth route
 //app.use('/api/properties',require('./properties/properties.routes')); // properties route
 
