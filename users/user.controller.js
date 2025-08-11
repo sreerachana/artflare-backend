@@ -13,6 +13,16 @@ exports.getAllUsers = async (req, res, next) => {
     }
 };
 
+exports.getAllArtists = async (req, res, next) => {
+    try {
+        const artists = await userService.getAllArtists();
+        return sendResponse(res, 200, true, 'Artists fetched successfully', artists);
+    } catch (error) {
+        next(error);
+    }
+};
+
+
 // Get user by ID
 exports.getUserById = async (req, res, next) => {
     try {

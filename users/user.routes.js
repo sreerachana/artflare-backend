@@ -6,10 +6,12 @@ const authorize = require('../middlewares/authorize');
 
 
 router.get('/', authenticate, userController.getAllUsers);
+router.get('/artists/all', userController.getAllArtists);
 router.get('/:id', authenticate, userController.getUserById);
 router.put('/:id', authenticate, userController.updateUser);
 router.delete('/:id', authenticate, userController.deleteUser);
 router.delete('/delete/:id', authenticate, authorize('admin'), userController.hardDeleteUser);
+
 
 module.exports = router;
 
